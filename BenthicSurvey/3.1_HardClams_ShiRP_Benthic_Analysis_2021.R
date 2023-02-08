@@ -15,8 +15,8 @@
 
 
 # Read in benthic survey data =========================================================================================
-benthic.clam.raw <- read_excel("Benthic_Survey_2012-2022.xlsx", sheet = "Clam.Measurements", na = "NA")
-benthic.site.raw <- read_excel("Benthic_Survey_2012-2022.xlsx", sheet = "Quadrat.Details", na = "NA")
+benthic.clam.raw <- read_excel("Data/Benthic_Survey_2012-2022.xlsx", sheet = "Clam.Measurements", na = "NA")
+benthic.site.raw <- read_excel("Data/Benthic_Survey_2012-2022.xlsx", sheet = "Quadrat.Details", na = "NA")
 # This will throw warnings about the "1/4" in the Quadrat field but fine because we are going to get rid of 
 #   them anyway (below).
 
@@ -73,8 +73,8 @@ exclude2 <- benthic.clam.raw %>%
 benthic.clam <- anti_join(benthic.clam.raw, exclude2)
 
 # Save for later use
-write.csv(benthic.clam,"Clams_2012-2021.csv", row.names = F)
-write.csv(benthic.site,"Sites_2012-2021.csv", row.names = F)
+write.csv(benthic.clam,"Data/Clams_2012-2022.csv", row.names = F)
+write.csv(benthic.site,"Data/Sites_2012-2022.csv", row.names = F)
 
 # END OF SCRIPT ========================================================================================================
 #   Proceding script: "3.2_HardClams_Densities_ShiRP_Benthic_Analysis_2021.R"

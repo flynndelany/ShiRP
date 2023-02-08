@@ -12,8 +12,7 @@
 #set_here()
 
 #Set working Directory ==============================================================================================
-setwd("D:/Projects/ShiRP/Data")
-
+setwd("D:/Projects/ShiRP/ShiRP_Git/BenthicSurvey")
 # NOTE: For the Here package to work appropriately, all called datasets must have a copy saved in the "Analysis" side
 #   of the project. E.g. "Benthic_Survey_2012-2021.xlsx" should be saved in "Data -> "2021" and "Analysis" -> "2021"
 
