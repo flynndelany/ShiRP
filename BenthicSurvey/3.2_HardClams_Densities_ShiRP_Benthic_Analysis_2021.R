@@ -147,7 +147,5 @@ clam.density.size.all <- gather(clam.density.size.spread.all,
                                 -Year, -Site.ID, -bay.side, 
                                 -Quadrat, -QuadratName)
 
-# Final Resulting Dataframes: age.total, clam.density.size, benthic.site.smp, clam.density.size.all
-
 # END OF SCRIPT =======================================================================================================
 #   Proceding script: "3.3_HardClams_Plots_ShiRP_Benthic_Analysis_2021.R"

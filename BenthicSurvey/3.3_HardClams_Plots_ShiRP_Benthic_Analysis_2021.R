@@ -258,6 +258,7 @@ annual.pre_market.dens.NAs <- data.frame(Year)
 annual.pre_market.mean <- bind_rows(annual.pre_market.mean, annual.pre_market.dens.NAs)
 
 # Ok, finally we can make the figure
+
 Y.lab <- expression("Pre-market Size Clam Abundance m"^-2)
 X.lab <- c("Year")
 
@@ -394,6 +395,7 @@ mean.market2 <- clam.density.size.all %>%
   summarize(Mean.m2 = mean(meanquads), SD = sd(meanquads), SEM = se(meanquads))
 mean.market2$Year <- as.factor(mean.market$Year)
   
+pdf("Plots/AdultClamDensByYear_Barplot.pdf", width = 8, height = 6)
 
 Y.lab <- expression("Adult Clam Abundance m"^-2)
 X.lab <- c("Year")
@@ -427,6 +429,8 @@ ggplot(mean.market2,
         axis.text.x = element_text(size = 14,
                                    colour = "black"),
         strip.text.x = element_text(size = 16, colour = "black"))
+
+dev.off()
 # use 6" height, 8" width for pdf
 
 # TOTAL ADULT DENSITY (BY YEAR AND BAY SIDE) ==========================================================================
@@ -452,6 +456,8 @@ NAs$bay.side <- as.character(NAs$bay.side)
 market.mean.Bside <- bind_rows(market.mean.Bside, NAs)
 
 # Ok, finally time to make the figure
+pdf("Plots/AdultClamDensByYearByBay_Barplot.pdf", width = 8, height = 6)
+
 Y.lab <- expression("Adult Clam Abundance m"^-2)
 X.lab <- c("Year")
 line <- "black"
@@ -465,8 +471,8 @@ ggplot(market.mean.Bside,
   scale_x_discrete(name=X.lab) +
   scale_y_continuous(name = Y.lab,
                      expand = c(0, 0),
-                     limits = c(0, 2.2),
-                     breaks = seq(0, 2.2, 0.2)) +
+                     limits = c(0, 2.8),
+                     breaks = seq(0, 2.8, 0.2)) +
   geom_errorbar(aes(ymin = Mean.m2 - SEM, ymax = Mean.m2 + SEM), width = 0.1,
                 position=position_dodge(0.65)) +
   geom_vline(aes(xintercept = 5.5)) +
@@ -489,6 +495,7 @@ ggplot(market.mean.Bside,
   labs(fill = "Region of Bay") +
   scale_color_manual(breaks=c("E", "W"),labels=c("Eastern", "Western"))
 
+dev.off()
 # use 6" height, 8" width for pdf
 
 
@@ -547,25 +554,27 @@ mean.dens$Bay.Year <- factor(mean.dens$Bay.Year,
                                         "W 2015", "W 2016", 
                                         "W 2017", "W 2018", 
                                         "W 2019", "W 2020",
-                                        "W 2021",
+                                        "W 2021", "W 2022",
                                         "E 2015", "E 2016",
                                         "E 2017", "E 2018",
                                         "E 2019", "E 2020",
-                                        "E 2021"))
+                                        "E 2021", "E 2022"))
 
 mean.dens$SizeClass <- factor(mean.dens$SizeClass,
                               levels = c("<9 mm", "9-16 mm", "17-25 mm", "26-35 mm", "36-38 mm", "39-41 mm", ">41 mm"))
 
 #     Set axis titles, lables
+pdf("Plots/StackedClamDensByYear_Barplot.pdf", width = 10, height = 6)
+
 Y.lab <- expression("Clam Abundance m"^-2)
 X.lab <- c("Year")
-labels <- c("2012", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021",
-            "2015", "2016", "2017", "2018", "2019", "2020", "2021")
+labels <- c("2012", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022",
+            "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022")
 
 #     Set graphing paramenters
 par(mar = c(5.1, 6.1, 4.1, 2.1), mgp = c(3.5, 0.75, 0)) 
 
-windowsFonts(A = windowsFont("Arial"))
+#windowsFonts(A = windowsFont("Arial"))
 
 #     Ready to plot!
 ggplot(mean.dens, 
@@ -574,16 +583,16 @@ ggplot(mean.dens,
   scale_fill_brewer(palette = "Paired", direction = -1) +
   labs(x = X.lab, y = Y.lab) +
   scale_x_discrete(breaks=c("W 2012", "W 2014", "W 2015", "W 2016", "W 2017", "W 2018", "W 2019", "W 2020", 
-                            "W 2021", "E 2015", "E 2016", "E 2017", "E 2018", "E 2019", "E 2020", "E 2021"),
+                            "W 2021", "W 2022", "E 2015", "E 2016", "E 2017", "E 2018", "E 2019", "E 2020", 
+                            "E 2021", "E 2022"),
                    labels=labels) +
   scale_y_continuous(name = Y.lab,
                      expand = c(0, 0),
-                     limits = c(0, 8),
-                     breaks = seq(0, 8, 0.2)) +
-  geom_vline(xintercept = 9.5, size = 1.5) +
+                     limits = c(0, 25),
+                     breaks = seq(0, 25, 1)) +
+  geom_vline(xintercept = 10.5, size = 1.5) +
   theme_bw() + 
-  theme(text = element_text(family = "A"),
-        panel.grid.major = element_blank(),
+  theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         strip.background = element_blank(),
         panel.border = element_rect(colour = "black")) + 
@@ -602,23 +611,14 @@ ggplot(mean.dens,
   theme(legend.text.align = 0,
         legend.title = element_text(size = 14),
         legend.text = element_text(size = 14))
-# Save PDF (5" x 10")
 
+dev.off()
 
-# Save data frames for later =======================================================================================
+# Organize data frames =======================================================================================
 pre_market.clams <- clam.density.size.all %>%
   filter(SizeClass == "Pre_market") %>%
   group_by(Year, Site.ID) %>%
   summarize(Mean.m2 = mean(Clams.m2))
-
-write.csv(pre_market.clams,"ClamDensityBySite_PreMarket_2012-2021.csv", row.names = F)
-write.csv(pre_market.total, "TotalPreMarketClamsRecovered_2012-2021.csv", row.names = F)
-write.csv(pre_market.total.Bside, "TotalPreMarketClamsRecovered_ByBaySide_2012-2021.csv", row.names = F)
-write.csv(mean.pre_market,"PreMarketClam_MeanDensity_2012-2021.csv", row.names = F)
-write.csv(pre_market.mean.Bside, "PreMarketClam_MeanDensity_ByBaySide_2012-2021.csv", row.names = F)
-write.csv(annual.pre_market.mean, "PreMarketClam_MeanDensity_AnnuallySurveyed_2012-2021.csv")
-write.csv(annual.pre_market.mean.Bside, "PreMarketClam_MeanDensity_ByBaySide_AnnuallySurveyed_2012-2021.csv", 
-          row.names = F)
 
 market.clams <- clam.density.size.all %>%
   filter(SizeClass == "Market") %>%
@@ -634,13 +634,6 @@ market.total.Bside <- age.total %>%
   filter(age == "market") %>%
   group_by(Year, bay.side) %>%
   summarize(count = sum(Count))
-
-write.csv(market.clams,"ClamDensityBySite_Market_2012-2021.csv", row.names = F)
-write.csv(market.total, "TotalMarketClamsRecovered_2012-2021.csv", row.names = F)
-write.csv(market.total.Bside, "TotalMarketClamsRecovered_byBaySide_2012-2021.csv", row.names = F)
-write.csv(mean.market,"MarketClam_MeanDensity_2012-2021.csv", row.names = F)
-write.csv(market.mean.Bside, "MarketClam_MeanDensity_ByBaySide_2012-2021.csv", row.names = F)
-write.csv(mean.dens, "ClamDensity_ByAgeClassAndYear_2012-2021.csv", row.names = F)
 
 # END OF SCRIPT =======================================================================================================
 #   Proceding Script: "3.4_HardClams_Baymen_ShiRP_Benthic_Analysis_2021.R"

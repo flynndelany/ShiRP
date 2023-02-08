@@ -67,7 +67,5 @@ exclude2 <- benthic.clam.raw %>%
            (Year == 2021 & Site.ID == "SGV 94"))
 benthic.clam <- anti_join(benthic.clam.raw, exclude2)
 
-# Final Resulting Dataframes: benthic.clam, benthic.site
-
 # END OF SCRIPT ========================================================================================================
 #   Proceding script: "3.2_HardClams_Densities_ShiRP_Benthic_Analysis_2021.R"
