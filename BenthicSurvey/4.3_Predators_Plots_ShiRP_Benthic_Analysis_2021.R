@@ -6,12 +6,7 @@
 
 # Authors: Diana Chin, Dylan Cottrell, Flynn DeLany (based on code from Rebecca Kulp)
 
-# Last Modified: 12/20/21
-
-
-# NOTE: For the Here package to work appropriately, all called datasets must have a copy saved in the "Analysis" side
-#   of the project. E.g. "Benthic_Survey_2012-2021.xlsx" should be saved in "Data -> "2021" and "Analysis" -> "2021"
-
+# Converted to GitHub 2/8/2023 - reference repository for future edit history
 
 # Barplots of mean predator abundances, >20 mm or >10 mm, by crustacean, gastropod, fish ==============================
 library(RColorBrewer)
@@ -20,6 +15,8 @@ par(mar = c(5.1, 6.1, 4.1, 2.1), mgp = c(3.5, 0.75, 0))
 colors <- palette(brewer.pal(n = 9, name = "Set1"))
 
 # Predators >20mm, crustaceans ========================================================================================
+pdf("Plots/Crust_Barplot.pdf", width = 8, height = 10)
+
 Y.lab <- expression("Abundance m"^-2)
 X.lab <- "Crustaceans >20 mm"
 colors <- palette(brewer.pal(n = 9, name = "Set1"))
@@ -50,9 +47,11 @@ ggplot(mean.pred20.crust,
         legend.title = element_text(size = 14),
         legend.text = element_text(size = 12)) +
   theme(legend.justification = c(-1,1))
-# use 6" height, 8" width for pdf
+dev.off()
 
 # Predators >20mm, gastropods =========================================================================================
+pdf("Plots/Gast_Barplot.pdf", width = 8, height = 10)
+
 Y.lab <- expression("Abundance m"^-2)
 X.lab <- "Gastropods >20 mm"
 colors <- palette(brewer.pal(n = 9, name = "Set1"))
@@ -83,9 +82,11 @@ ggplot(mean.pred20.gastro,
         legend.title = element_text(size = 14),
         legend.text = element_text(size = 12)) +
   theme(legend.justification = c(-1,1))
-# use 6" height, 8" width for pdf
+dev.off()
 
 # Predators >20mm, fish ===============================================================================================
+pdf("Plots/Fish_Barplot.pdf", width = 8, height = 10)
+
 Y.lab <- expression("Abundance m"^-2)
 X.lab <- "Fish >20 mm"
 colors <- palette(brewer.pal(n = 9, name = "Set1"))
@@ -116,7 +117,7 @@ ggplot(mean.pred20.fish,
         legend.title = element_text(size = 14),
         legend.text = element_text(size = 12)) +
   theme(legend.justification = c(-1,1))
-# use 6" height, 8" width for pdf
+dev.off()
 
 # Predators >10mm, crustaceans ========================================================================================
 Y.lab <- expression("Abundance m"^-2)

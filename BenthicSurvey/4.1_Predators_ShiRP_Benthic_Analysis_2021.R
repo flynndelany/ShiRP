@@ -11,6 +11,7 @@
 
 # Import data =========================================================================================================
 benthic.fauna.raw <- read_excel("Data/Benthic_Survey_2012-2022.xlsx", sheet = "Fauna.Measurements", na = "NA")
+benthic.fauna.counts.raw <- read_excel("Data/Benthic_Survey_2012-2022.xlsx", sheet = "FaunaCounts", na = "NA")
 benthic.sitesanct.raw <- read_excel("Data/Benthic_Survey_2012-2022.xlsx", sheet = "Quadrat.Details", na = "NA")
 # This will throw warnings about the "1/4" in the Quadrat field but fine because we are going to get rid of them 
 #   anyway.
@@ -18,7 +19,7 @@ benthic.sitesanct.raw <- read_excel("Data/Benthic_Survey_2012-2022.xlsx", sheet 
 # Remove several items from these datasets:
 #   NOTE: SITES REMOVED HERE SHOULD BE SAME AS "3.1_HardClams_ShiRP_Benthic_Analysis_2020.R"
 
-#      From site details dataset, remove cases that are "1/4" in Quadrat field (these are records of when Rebecca did 
+#     From site details dataset, remove cases that are "1/4" in Quadrat field (these are records of when Rebecca did 
 #       an extra 1/4 m2 quadrat for Diana in 2016 looking for Solemya only). Gets rid of 2015 SGV 49 quadrat "3" too 
 #       but that's ok here because only a bivalve in the fauna dataset for that quadrat.
 #     From site details dataset, remove 2016 SGV 92 Q1 and SGV93 Q2 (error in sample processing and don't know which 
@@ -58,6 +59,18 @@ exclude2 <- benthic.fauna.raw %>%
 
 benthic.fauna <- anti_join(benthic.fauna.raw, exclude2)
 
+exclude3 <- benthic.fauna.counts.raw %>%
+  filter((Year == 2017 & Site.ID == "SGV 86" & Date == "2017-08-10") |
+           (Year == 2019 & Site.ID == "Sedge 1") |
+           (Year == 2019 & Site.ID == "Sedge 2") |
+           (Year == 2019 & Site.ID == "Sedge 3") |
+           (Year == 2019 & Site.ID == "Sedge 4") |
+           (Year == 2019 & Site.ID == "Sedge 5") |
+           (Year == 2019 & Site.ID == "Sedge 6") |
+           (Year == 2019 & Site.ID == "Sedge 7"))
+
+benthic.fauna.counts <- anti_join(benthic.fauna.counts.raw, exclude3)
+
 # Create list of what was considered predators during 2021 field sampling 
 preds <- c("American Eel", "Blue Crab", "Channeled Whelk", "Common Mud Crab", "Cunner", "Cusk Eel", 
            "Flatclaw Hermit", "Green Crab", "Grubby sculpin", "Hermit Crab", "Horseshoe Crab", 
@@ -66,6 +79,9 @@ preds <- c("American Eel", "Blue Crab", "Channeled Whelk", "Common Mud Crab", "C
            "Portly Spider Crab", "Rock Crab", "Sand Shrimp", "Sayi Crab", "Sculpin", "Sea Robin", 
            "Shame-faced crab", "Spider Crab", "Starfish", "Summer Flounder", "Whelk", "Winter Flounder")
 
+Bivalves <- c("Bay Scallop", "Blood Ark", "Blue Mussel", "Dwarf Surf Clam", "Egg Cockle", "False Angelwing",
+              "File Yoldia", "Jingle Shell", "Razor Clam", "Soft Shell Clam", "Solemya Clam", "Surf Clam",
+              "Tagelus Clam", "Transverse Ark")
 # Limit the fauna dataset to two sets - predators >20 mm (whatever metric) because this is what was done previously, 
 #     and predators >10 mm per sampling methodology.
 # >20mm will take out predators on the smaller juveniles - small oyster drills (up to 20 mm according 
