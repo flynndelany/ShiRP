@@ -69,9 +69,6 @@ clam.density.all <- full_join(benthic.site, clam.density)
 clam.density.all <- select(clam.density.all, Year, Site.ID, bay.side, Quadrat, QuadratName, Clams.m2)
 clam.density.all$Clams.m2[is.na(clam.density.all$Clams.m2)] <- 0
 
-# Save for later
-write.csv(clam.density.all,"ClamDensity_PerSite_2012-2021.csv", row.names = F)
-
 # Now we want the same calculation of clam densities per 1 m2 for all quadrats but with the clams 
 #   divided into size classes by shell width
 #     Use the same categories as clam sanctuaries (as decided by Mike Doall). These categories were first used for
