@@ -6,18 +6,13 @@
 
 # Authors: Diana Chin, Dylan Cottrell, Flynn DeLany (based on code from Rebecca Kulp)
 
-# Last Modified: 12/16/21
+# Converted to GitHub 2/8/2023 - reference repository for future edit history
 
+# Check Environment for Data ====================
+exists('benthic.site')
+exists('benthic.clam')
 
-# NOTE: For the Here package to work appropriately, all called datasets must have a copy saved in the "Analysis" side
-#   of the project. E.g. "Benthic_Survey_2012-2021.xlsx" should be saved in "Data -> "2021" and "Analysis" -> "2021"
-
-
-# Check Environment for Data (benthic.site, benthic.clam) ====================
-
-benthic.site
-benthic.clam
-
+#IF ANY FALSE RUN PRECEDING SCRIPTS
 
 # Calculate hard clam stats (total recovered and density) ==========================================================
 

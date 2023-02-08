@@ -7,7 +7,7 @@
 
 # Authors: Diana Chin, Dylan Cottrell, Flynn DeLany (based on code from Rebecca Kulp)
 
-# Last Modified: 12/16/21
+# Converted to GitHub 2/8/2023 - reference repository for future edit history
 
 
 # NOTE: For the Here package to work appropriately, all called datasets must have a copy saved in the "Analysis" side
@@ -15,11 +15,12 @@
 
 
 # Load Data ========================================================================================================
-clam.density.size.all <- read.csv("clam.density.size.all.csv")
-age.total <- read.csv("age.total.csv")
-clam.density.size <- read.csv("clam.density.size.csv")
-benthic.site.smp <- read.csv("benthic.site.smp.csv")
+exists('clam.density.size.all')
+exists('age.total')
+exists('clam.density.size')
+exists('benthic.site.smp')
 
+#IF ANY FALSE RUN PRECEDING SCRIPTS
 
 # TOTAL PRE-MARKET SIZE CLAMS RECOVERED (BY YEAR) =====================================================================
 #   Filter density df by age (pre-market vs. market) and calculate summary stats. When calculating mean densities, 
@@ -41,6 +42,8 @@ mean.market <- clam.density.size.all %>%
 mean.market$Year <- as.factor(mean.market$Year)
 
 # Plot
+pdf("Plots/JuvClamDensByYear_Barplot.pdf", width = 8, height = 6)
+
 Y.lab <- expression("Juvenile Clam Abundance m"^-2)
 X.lab <- c("Year")
 colors <-c("dodgerblue3")
@@ -54,8 +57,8 @@ ggplot(mean.pre_market,
   labs(x = X.lab, y = Y.lab) +
   scale_x_discrete(breaks = levels(mean.pre_market$Year), labels = levels(mean.pre_market$Year)) +
   scale_y_continuous(expand = c(0, 0),
-                     limits = c(0, 6),
-                     breaks = seq(0, 6, 0.2)) +
+                     limits = c(0, 20),
+                     breaks = seq(0, 20, 0.5)) +
   geom_vline(aes(xintercept = 5.5)) +
   theme_bw() + 
   theme(panel.grid.major = element_blank(),
@@ -74,7 +77,7 @@ ggplot(mean.pre_market,
                                    colour = "black"),
         strip.text.x = element_text(size = 16, colour = "black"))
 # use 6" height, 8" width for pdf
-
+dev.off()
 
 # TOTAL PRE-MARKET SIZE CLAMS RECOVERED (BY YEAR AND BAY SIDE) ========================================================
 #   Calculate total juveniles recovered by year and save as variable (used for the overlying line plot)
@@ -103,6 +106,8 @@ pre_market.NAs$bay.side <- as.character(pre_market.NAs$bay.side)
 pre_market.total.Bside <- bind_rows(pre_market.total.Bside, pre_market.NAs)
 
 # Ok, finally time to make the figure
+pdf("Plots/JuvClamIndByYearByBay_Barplot.pdf", width = 8, height = 6)
+
 Y.lab <- expression("Number of Juvenile Clams")
 X.lab <- c("Year")
 line <- "black"
@@ -116,8 +121,8 @@ ggplot() +
   scale_x_discrete(name="Year") +
   scale_y_continuous(name = "Number of Juvenile Clams",
                      expand = c(0, 0),
-                     limits = c(0, 600),
-                     breaks = seq(0, 600, 20)) +
+                     limits = c(0, 2000),
+                     breaks = seq(0, 2000, 100)) +
   geom_vline(aes(xintercept = 5.5)) +
   theme_bw() + 
   theme(panel.grid.major = element_blank(),
@@ -137,9 +142,11 @@ ggplot() +
         strip.text.x = element_text(size = 16, colour = "black")) +
   labs(fill = "Region of Bay") +
   scale_color_manual(breaks=c("E", "W"),labels=c("Eastern", "Western"))
+dev.off()
 
 # TOTAL JUVENILE DENSITY (BY YEAR AND BAY SIDE) =======================================================================
 #   Calculate total juvenile density by year AND BAY SIDE (used for bar plot)
+
 pre_market.mean.Bside <- clam.density.size.all %>%
   filter(SizeClass == "Pre_market") %>%
   group_by(Year, Site.ID, Quadrat, bay.side) %>%
@@ -160,6 +167,8 @@ pre_market.dens.NAs$bay.side <- as.character(pre_market.NAs$bay.side)
 pre_market.mean.Bside <- bind_rows(pre_market.mean.Bside, pre_market.dens.NAs)
 
 # Ok, finally time to make the figure
+pdf("Plots/JuvClamDensByYearByBay_Barplot.pdf", width = 8, height = 6)
+
 Y.lab <- expression("Juvenile Clam Density (individuals/m^2)")
 X.lab <- c("Year")
 line <- "black"
@@ -170,8 +179,8 @@ ggplot(pre_market.mean.Bside, aes(x = Year, y = Mean.m2, fill=bay.side)) +
   scale_x_discrete(name=X.lab) +
   scale_y_continuous(name = Y.lab,
                      expand = c(0, 0),
-                     limits = c(0, 8),
-                     breaks = seq(0, 8, 0.25)) +
+                     limits = c(0, 26),
+                     breaks = seq(0, 26, 1)) +
   geom_errorbar(aes(ymin = Mean.m2 - SEM, ymax = Mean.m2 + SEM), width = 0.1,
                 position=position_dodge(0.65)) +
   geom_vline(aes(xintercept = 5.5)) +
@@ -193,6 +202,8 @@ ggplot(pre_market.mean.Bside, aes(x = Year, y = Mean.m2, fill=bay.side)) +
         strip.text.x = element_text(size = 16, colour = "black")) +
   labs(fill = "Region of Bay") +
   scale_color_manual(breaks=c("E", "W"),labels=c("Eastern", "Western"))
+
+dev.off()
 
 # PRE-MARKET SIZE DENSITY AT ANNUAL SITES (BY YEAR) ====
 #     This is a subset of only those sites that have been monitored annually since 2012 for 
