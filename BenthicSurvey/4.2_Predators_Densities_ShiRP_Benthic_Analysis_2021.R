@@ -6,22 +6,17 @@
 
 # Authors: Diana Chin, Dylan Cottrell, Flynn DeLany (based on code from Rebecca Kulp)
 
-# Last Modified: 12/20/21
-
-
-# NOTE: For the Here package to work appropriately, all called datasets must have a copy saved in the "Analysis" side
-#   of the project. E.g. "Benthic_Survey_2012-2021.xlsx" should be saved in "Data -> "2021" and "Analysis" -> "2021"
-
+# Converted to GitHub 2/8/2023 - reference repository for future edit history
 
 # Calculate Predator Densities ========================================================================================
 #   For GIS, calculate densities for any predator (not distinguishing by predator group e.g. crustaceans) by 
-#     site for all years before 2021 and for 2021, first averaging together the 2 replicate quadrats for each site 
+#     site for all years before 2022 and for 2022, first averaging together the 2 replicate quadrats for each site 
 #     in each year.
 #   Only doing this for predators >20 mm due to requirements of ShiRP report, but could easily copy for predators 
 #     >10 mm ("all") like rest of script.
 
-density.pred20.any.pre2021 <- benthic.pred20.all %>%
-  filter(Year != 2021) %>%
+density.pred20.any.pre2022 <- benthic.pred20.all %>%
+  filter(Year != 2022) %>%
   group_by(Year, Site.ID, Quadrat) %>%
   summarize(count = sum(N.m2)) %>%
   group_by(Year, Site.ID) %>%
@@ -29,8 +24,8 @@ density.pred20.any.pre2021 <- benthic.pred20.all %>%
   group_by(Site.ID) %>%
   summarize(n.m2 = mean(meanquads))
 
-density.pred20.any.2021 <- benthic.pred20.all %>%
-  filter(Year == 2021) %>%
+density.pred20.any.2022 <- benthic.pred20.all %>%
+  filter(Year == 2022) %>%
   group_by(Site.ID, Quadrat) %>%
   summarize(count = sum(N.m2)) %>%
   group_by(Site.ID) %>%
@@ -111,20 +106,6 @@ mean.density.allpred <- mean.density.allpred[!duplicated(mean.density.allpred[, 
 mean.density.allpred <- mean.density.allpred %>%
   group_by(Year) %>%
   summarize(Mean.m2 = mean(meanquads), SD = sd(meanquads), SEM = se(meanquads))
-  
-
-# Save for later
-write.csv(benthic.pred20.all,"Predators_GreaterThan20_2012-2021.csv", row.names=F)
-write.csv(benthic.predall.all,"Predators_All_2012-2021.csv", row.names=F)
-write.csv(density.pred20.any.pre2021,"PredatorDensity_GreaterThan20_2012-2020.csv", row.names=F)
-write.csv(density.pred20.any.2021,"PredatorDensity_GreaterThan20_2021.csv", row.names=F)
-write.csv(mean.pred20.crust,"MeanDensity_Crustaceans_GreaterThan20_2012-2021.csv", row.names=F)
-write.csv(mean.pred20.gastro,"MeanDensity_Gastropods_GreaterThan20_2012-2021.csv", row.names=F)
-write.csv(mean.pred20.fish,"MeanDensity_Fish_GreaterThan20_2012-2021.csv", row.names=F)
-write.csv(mean.predall.crust,"MeanDensity_Crustaceans_GreaterThan10_2012-2021.csv", row.names=F)
-write.csv(mean.predall.gastro,"MeanDensity_Gastropods_GreaterThan10_2012-2021.csv", row.names=F)
-write.csv(mean.predall.fish,"MeanDensity_Fish_GreaterThan10_2012-2021.csv", row.names=F)
-write.csv(mean.density.allpred, "MeanDensity_AllPredators_2012-2021.csv")
 
 # END OF SCRIPT =======================================================================================================
     # Procede to: "4.3_Predators_Plots_ShiRP_Benthic_Analysis_2021.R"
