@@ -8,8 +8,12 @@
 
 
 #Set path for "Here" package ========================================================================================
-library(here)
-set_here()
+#library(here)
+#set_here()
+
+#Set working Directory ==============================================================================================
+setwd("D:/Projects/ShiRP/Data")
+
 # NOTE: For the Here package to work appropriately, all called datasets must have a copy saved in the "Analysis" side
 #   of the project. E.g. "Benthic_Survey_2012-2021.xlsx" should be saved in "Data -> "2021" and "Analysis" -> "2021"
 
@@ -21,6 +25,7 @@ library(tidyr)
 library(dplyr)
 library(ggplot2)
 library(RColorBrewer)
+library(tidyverse)
 
 
 # Create custom formulas/plotting parameters: ========================================================================
