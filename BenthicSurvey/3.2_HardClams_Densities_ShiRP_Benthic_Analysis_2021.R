@@ -13,10 +13,10 @@
 #   of the project. E.g. "Benthic_Survey_2012-2021.xlsx" should be saved in "Data -> "2021" and "Analysis" -> "2021"
 
 
-# Load Data (Only necessary if dataframes are not already in environment from preceding script) ====================
+# Check Environment for Data (benthic.site, benthic.clam) ====================
 
-benthic.site <- read.csv("Sites_2012-2021.csv")
-benthic.clam <- read.csv("Clams_2012-2021.csv")
+benthic.site
+benthic.clam
 
 
 # Calculate hard clam stats (total recovered and density) ==========================================================
@@ -152,11 +152,7 @@ clam.density.size.all <- gather(clam.density.size.spread.all,
                                 -Year, -Site.ID, -bay.side, 
                                 -Quadrat, -QuadratName)
 
-# Save for later:
-write.csv(age.total, "age.total.csv", row.names = F)
-write.csv(clam.density.size, "clam.density.size.csv", row.names = F)
-write.csv(benthic.site.smp, "benthic.site.smp.csv", row.names = F)
-write.csv(clam.density.size.all,"clam.density.size.all.csv", row.names = F)
+# Final Resulting Dataframes: age.total, clam.density.size, benthic.site.smp, clam.density.size.all
 
 # END OF SCRIPT =======================================================================================================
 #   Proceding script: "3.3_HardClams_Plots_ShiRP_Benthic_Analysis_2021.R"
