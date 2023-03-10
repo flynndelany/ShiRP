@@ -1,0 +1,106 @@
+---
+title: "Stats on Bentic Survey Densities"
+author: "Flynn DeLany"
+date: "2/16/2022"
+output: pdf_document
+---
+## Summary:
+The distribution of the benthic survey clam densities invalidates assumptions to run an ANOVA as it is zero-inflated poisson distributed (section 3). An analysis of deviance shows differences between model parameters in both year and side of the bay (section 4). After which a post-hoc pairwise comparison of the zero-inflated model was ran showing each parameter combination difference significance (section 5) 
+
+Note: Pairwise comparison generated values for the Eastern Bay in 2012 and 2014 but no survey was actually done those years on that side of the bay.  
+
+## Method description
+Clam abundance observations per one meter quadrat were modeled by a zero-inflated poisson distribution using the pscl package in R studio v1.4.1103. Zero inflation was confirmed by comparing a poisson generalized linear model to the zero-inflation model with the Vuong Test (AIC-corrected p = 3.5849e-14; BIC-corrected p = 1.4207e-12). An analysis of deviance was performed with the car package. analysis of deviance shows difference in the model parameters for both bay side (p = 1.293e-10) and year (p = 2.2e-16). Lastly a post-hoc pairwise comparison was ran for the zero-inflated model using the emmeans package.
+
+## Packages
+```{r}
+library(dplyr)
+library(pscl)
+library(car)
+library(emmeans)
+```
+
+## 1. Simplification of data frame (from ShiRP Benthic Survey Analysis script 3.2)
+```{r, include=FALSE}
+setwd("C:/Users/flynn/OneDrive/Desktop/ShiRP/Benthic_Survey/Analysis/2021")
+benthic.site <- read.csv("Sites_2012-2021.csv")
+benthic.site <- read.csv("Sites_2012-2021.csv")
+benthic.clam <- read.csv("Clams_2012-2021.csv")
+
+
+# Calculate hard clam stats (total recovered and density) ==========================================================
+
+#   Reclassify clams in a new dataframe (to be used in "TOTAL PRE-MARKET SIZE CLAMS 
+#     RECOVERED (BY YEAR AND BAY SIDE)" sub-header in this script)
+age.total <- benthic.clam %>%
+  mutate(age = case_when(
+    SW <= 25 ~ "pre-market",
+    SW > 25 ~ "market"))
+
+# Hard clam density per m2 for each quadrat
+clam.density <- benthic.clam %>%
+  group_by(Year,bay.side, Site.ID, Quadrat, Quadrat.size) %>%
+  summarize(nClams = sum(Count)) %>%
+  mutate(Clams.m2 = nClams/Quadrat.size) %>%
+  mutate(QuadratName = paste(Year, Site.ID, Quadrat))
+
+# Make a quadrat name for "site details" dataset too
+benthic.site <- benthic.site %>%
+  mutate(QuadratName = paste(Year, Site.ID, Quadrat))
+
+# Check that all levels of Site.ID in the clam dataset are also in the site details dataset
+clam.density$`Site.ID` <- as.factor(clam.density$`Site.ID`)
+benthic.site$Site.ID <- as.factor(benthic.site$Site.ID)
+
+all(levels(clam.density$`Site.ID`) %in% levels(benthic.site$Site.ID))
+
+clam.density.all <- full_join(benthic.site, clam.density)
+clam.density.all <- select(clam.density.all, Year, Site.ID, bay.side, Quadrat, QuadratName, Clams.m2)
+clam.density.all$Clams.m2[is.na(clam.density.all$Clams.m2)] <- 0
+```
+```{r}
+clams <- clam.density.all %>%
+  ungroup() %>%
+  transmute(Year = as.factor(Year), bay.side, Site.ID, clams=Clams.m2)
+head(clams)
+```
+
+## 2a. Generation of Poisson model 
+```{r}
+clam.fit <- glm(clams~Year+bay.side,family = poisson, data = clams)
+summary(clam.fit)
+```
+
+## 2b.Generation of zero inflated poisson model
+```{r}
+clam.zinf <- zeroinfl(clams~Year+bay.side, data = clams)
+summary(clam.zinf)
+```
+
+## 3a. Comparison of zero inflated to null model
+```{r}
+cnull <- update(clam.zinf, . ~ 1)
+
+pchisq(2 * (logLik(clam.zinf) - logLik(cnull)), df = 2, lower.tail = FALSE)
+```
+
+## 3b. Comparison of glm to zero inflation poisson model using vuong
+```{r}
+vuong(clam.fit, clam.zinf)
+```
+
+Zero inflated model wins by landslide
+
+
+## 4. Analysis of deviance
+```{r}
+Anova(clam.zinf)
+```
+
+Both year and bay.side are significant parameters
+
+## 5. Pairwise comparison of all parameter combonations
+```{r}
+clampair = emmeans(clam.zinf, specs = pairwise ~ Year:bay.side)
+clampair$contrasts
+```
