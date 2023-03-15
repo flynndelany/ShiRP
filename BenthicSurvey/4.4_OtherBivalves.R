@@ -58,7 +58,6 @@ mean.bivalvesPre2022 <- mean.bivalves %>%
   group_by(Subgroup) %>%
   summarise(mean.n.m2 = mean(n.m2), SD = sd(n.m2), SEM = se(n.m2))
 
-pdf("Plots/BivalvePre2022_Barplot.pdf", width = 8, height = 10)
 Y.lab <- expression("Abundance m"^-2)
 X.lab <- "Bivalves (excluding Hard Clams)"
 colors <- palette(brewer.pal(n = 9, name = "Set1"))
@@ -87,10 +86,9 @@ ggplot(mean.bivalvesPre2022,
   theme(legend.text.align = 0,
         legend.title = element_text(size = 14),
         legend.text = element_text(size = 12)) +
-  theme(legend.justification = c(-1,1))
-dev.off()
+  theme(legend.justification = c(-1,1)) +
+  ylim(0, 45)
 
-pdf("Plots/Bivalves2022_Barplot.pdf", width = 8, height = 10)
 ggplot(mean.bivalves2022, 
        aes(x = Subgroup, y = n.m2, fill = Subgroup)) + 
   geom_col(width = 0.8, color = "black", position = "dodge") +
@@ -117,5 +115,6 @@ ggplot(mean.bivalves2022,
   theme(legend.text.align = 0,
         legend.title = element_text(size = 14),
         legend.text = element_text(size = 12)) +
-  theme(legend.justification = c(-1,1))
-dev.off()
+  theme(legend.justification = c(-1,1)) +
+  ylim(0, 45)
+
